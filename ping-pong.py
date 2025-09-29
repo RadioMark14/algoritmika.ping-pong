@@ -53,6 +53,8 @@ finish = False
 clock = time.Clock()
 speed_x = 3
 speed_y = 3
+score1 = 0
+score2 = 0
 while run:
     for e in event.get():
         if e.type == QUIT:
@@ -67,33 +69,42 @@ while run:
         ball.reset()
         ball.update()
 
-        if ball.rect.y > win_height-50 or ball.rect.y > 0:
+       
+        score_text = font1.render("Player 1: {score1}  |  Player 2: {score2}", True, (0, 0, 0))
+        window.blit(score_text, (230, 20))
+
+        
+        if ball.rect.y <= 0 or ball.rect.y >= win_height - ball.rect.height:
             speed_y *= -1 
 
+     
         if sprite.collide_rect(player, ball) or sprite.collide_rect(player2, ball):
             speed_x *= -1
 
+        
         if ball.rect.x < 0:
+            score2 += 1
             finish = True
             window.blit(lose1, (200, 200))
 
-        if ball.rect.x > 700:
+        
+        if ball.rect.x > win_width:
+            score1 += 1
             finish = True
             window.blit(lose2, (200, 200))
 
     else:
-        run = True
+        
+        display.update()
+        time.delay(1500)
+
         finish = False
-        clock = time.Clock()
         speed_x = 3
         speed_y = 3
 
         player = Player('racket.jpg', 0, 235, 3, 50, 150)
         player2 = Player('racket.jpg', 650, 235, 3, 50, 150)
-
         ball = Ball('ball.jpg', 300, 250, 3, 50, 50)
-
-        time.delay(2000)
 
     display.update()
     clock.tick(60)
